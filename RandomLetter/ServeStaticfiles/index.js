@@ -13,7 +13,13 @@ module.exports = async function (context, req) {
     try {
         // Check if the file exists
         if (fs.existsSync(filePath)) {
-            const content = fs.readFileSync(filePath, 'utf8');
+            let content = fs.readFileSync(filePath, 'utf8');
+
+            // If the file is index.html, inject the current letter
+            if (fileName === 'index.html') {
+                const currentLetter = process.env.CURRENT_LETTER || "No letter set yet.";
+                content = content.replace('{{CURRENT_LETTER}}', currentLetter);
+            }
 
             // Return the file content with the appropriate content type
             context.res = {
